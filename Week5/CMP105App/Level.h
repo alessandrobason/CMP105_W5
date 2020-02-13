@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Framework/Input.h"
 #include "Framework/GameObject.h"
+#include "Framework/Animation.h"
 #include <string>
 #include <iostream>
 
@@ -24,4 +25,8 @@ private:
 	// Default variables for level class.
 	sf::RenderWindow* window;
 	Input* input;
+
+	sf::Texture zombieSpriteSheet;
+	sf::Sprite zombieSprite;
+	Animation walkAnimation;
 };
