@@ -26,7 +26,8 @@ private:
 	sf::RenderWindow* window;
 	Input* input;
 
-	sf::Texture zombieSpriteSheet;
-	sf::Sprite zombieSprite;
-	Animation walkAnimation;
+	sf::Texture marioSpriteSheet;
+	sf::Sprite marioSpr;
+	Animation marioAnimations[3] = {Animation()};
+	int currentAnimation = 0;
 };

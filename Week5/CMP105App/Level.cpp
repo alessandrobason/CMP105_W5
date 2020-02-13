@@ -6,17 +6,26 @@ Level::Level(sf::RenderWindow* hwnd, Input* in)
 	input = in;
 
 	// initialise game objects
-	if (!zombieSpriteSheet.loadFromFile("gfx/animZombie.png")) {
-		std::cout << "Couldn't load zombie sprite sheet\n";
+
+	if (!marioSpriteSheet.loadFromFile("gfx/MarioSheetT.png")) {
+		std::cout << "Couldn't load mario sprite sheet\n";
 	}
 
-	zombieSprite.setTexture(zombieSpriteSheet);
-	zombieSprite.setPosition(sf::Vector2f((window->getSize().x - 55) / 2, (window->getSize().y - 108) / 2));
+	marioSpr.setTexture(marioSpriteSheet);
+	marioSpr.setPosition(sf::Vector2f((window->getSize().x) / 2, (window->getSize().y) / 2));
 
-	walkAnimation = Animation();
-	walkAnimation.setFrameSpeed(0.1);
-	for (size_t i = 0; i < 8; i++) {
-		walkAnimation.addFrame(sf::IntRect(i*55, 0, 55, 108));
+	marioAnimations[0].setFrameSpeed(0.2);
+	marioAnimations[1].setFrameSpeed(0.2);
+	marioAnimations[2].setFrameSpeed(0.2);
+
+	for (size_t i = 0; i < 4; i++) {
+		marioAnimations[0].addFrame(sf::IntRect(i * 15, 0, 15, 21));
+	}
+	for (size_t i = 0; i < 3; i++) {
+		marioAnimations[1].addFrame(sf::IntRect(i * 16, 21, 16, 20));
+	}
+	for (size_t i = 0; i < 2; i++) {
+		marioAnimations[2].addFrame(sf::IntRect(i * 16, 41, 16, 20));
 	}
 }
 
@@ -29,30 +38,37 @@ Level::~Level()
 void Level::handleInput(float dt)
 {
 	if (input->isKeyDown(sf::Keyboard::Left)) {
-		walkAnimation.play(true);
-		walkAnimation.setFlipped(true);
+		marioAnimations[currentAnimation].play(true);
+		marioAnimations[currentAnimation].setFlipped(true);
 	}
 	else if (input->isKeyDown(sf::Keyboard::Right)) {
-		walkAnimation.play(true);
-		walkAnimation.setFlipped(false);
+		marioAnimations[currentAnimation].play(true);
+		marioAnimations[currentAnimation].setFlipped(false);
+	}
+	else if (input->isKeyDown(sf::Keyboard::Space)) {
+		currentAnimation = 1;
+	}
+	else if (input->isKeyDown(sf::Keyboard::Down)) {
+		currentAnimation = 2;
 	}
 	else {
-		walkAnimation.stop();
+		currentAnimation = 0;
+		marioAnimations[currentAnimation].stop();
 	}
 }
 
 // Update game objects
 void Level::update(float dt)
 {
-	walkAnimation.animate(dt);
-	zombieSprite.setTextureRect(walkAnimation.getCurrentFrame());
+	marioAnimations[currentAnimation].animate(dt);
+	marioSpr.setTextureRect(marioAnimations[currentAnimation].getCurrentFrame());
 }
 
 // Render level
 void Level::render()
 {
 	beginDraw();
-	window->draw(zombieSprite);
+	window->draw(marioSpr);
 	endDraw();
 }
 
